@@ -65,3 +65,12 @@ ExecStart=/usr/libexec/bluetooth/bluetoothd --experimental
 ```
 
 - Save the file, and run the following command: `fc-cache -f -v`
+
+### Fix Discord (Flatpak version) not working with SELinux in enforcing mode (Discord shows a message saying that the installation is corrupted)
+
+Open a Terminal, and run:
+
+```bash
+sudo ausearch -c 'Discord' --raw | audit2allow -M discord
+sudo semodule -i discord.pp
+```
