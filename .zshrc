@@ -99,3 +99,13 @@ fi
 # Example aliases
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
+
+
+## CUSTOM SETTINGS ##
+
+# Add SSH and GPG keys to agent.
+export GPG_AGENT_INFO="~/.gnupg/S.gpg-agent:$(pgrep gpg-agent):1"
+eval `keychain -q --eval --agents ssh nikhil_rsa`
+
+# Add stuff to PATH
+export PATH="$PATH:/home/nikhil/.local/bin"
