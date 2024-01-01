@@ -92,3 +92,9 @@ UUID=<UUID>  /mnt/<MOUNT_DIRECTORY>     <FILESYSTEM>   user,data=writeback,defau
 ```
 
 - After saving the file and exiting, the drive can now be mounted and selected as a storage drive in Steam.
+
+### Enable full screen sharing for XWayland apps
+
+- Install the [XWayland Video Bridge](https://invent.kde.org/system/xwaylandvideobridge) application. (The package is usually `xwaylandvideobridge` on most distros)
+- Run the XWayland Video Bridge application from the applications menu.
+- The application should also be added to autostart to enable it on every boot.
