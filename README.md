@@ -74,3 +74,21 @@ Open a Terminal, and run:
 sudo ausearch -c 'Discord' --raw | audit2allow -M discord
 sudo semodule -i discord.pp
 ```
+
+### Setting up storage as a Steam drive
+
+#### Using YaST
+
+TODO
+
+#### Manual
+
+- Create a directory as a mount point in `/mnt` (Eg: `/mnt/MySteamDrive`). Ensure the ownership of this directory is `$USER:$USER`.
+- Use the `blkid` command to get the UUID of the drive (Eg: `sudo blkid /dev/sda1`)
+- Add the following entry in `/etc/fstab`:
+
+```text
+UUID=<UUID>  /mnt/<MOUNT_DIRECTORY>     <FILESYSTEM>   user,data=writeback,defaults,exec,noatime,barrier=0  0  2
+```
+
+- After saving the file and exiting, the drive can now be mounted and selected as a storage drive in Steam.
