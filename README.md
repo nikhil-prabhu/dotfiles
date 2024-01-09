@@ -98,3 +98,16 @@ UUID=<UUID>  /mnt/<MOUNT_DIRECTORY>     <FILESYSTEM>   user,data=writeback,defau
 - Install the [XWayland Video Bridge](https://invent.kde.org/system/xwaylandvideobridge) application. (The package is usually `xwaylandvideobridge` on most distros)
 - Run the XWayland Video Bridge application from the applications menu.
 - The application should also be added to autostart to enable it on every boot.
+
+### Allow adding printers from KDE System Settings (openSUSE)
+
+- Open the file `/etc/cups/cups-files.conf` and find the line that starts with `SystemGroup`. By default, its value is set to just `root`.
+- Modify this line to add the `wheel` group to it.
+
+```ini
+SystemGroup wheel root
+```
+
+- Save the file and restart the CUPS service: `sudo systemctl restart cups`
+- Add your user to the `wheel` group: `sudo usermod -a -G wheel $USER`
+- Log out and log in again for the group changes to take effect.
