@@ -97,7 +97,7 @@ UUID=<UUID>  /mnt/<MOUNT_DIRECTORY>     <FILESYSTEM>   user,data=writeback,defau
 
 - Install the [XWayland Video Bridge](https://invent.kde.org/system/xwaylandvideobridge) application. (The package is usually `xwaylandvideobridge` on most distros)
 - Run the XWayland Video Bridge application from the applications menu.
-- The application should also be added to autostart to enable it on every boot.
+- ~~The application should also be added to autostart to enable it on every boot.~~ The application seems to autostart without requiring to add it to the autostart applications. If its added to autostart, it seems to spawn multiple instances on boot. This is apparently a bug that's being fixed in KDE Plasma.
 
 ### Allow adding printers from KDE System Settings (openSUSE)
 
