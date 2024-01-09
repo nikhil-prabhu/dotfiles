@@ -111,3 +111,16 @@ SystemGroup wheel root
 - Save the file and restart the CUPS service: `sudo systemctl restart cups`
 - Add your user to the `wheel` group: `sudo usermod -a -G wheel $USER`
 - Log out and log in again for the group changes to take effect.
+
+### Fix broken rendering in Chromium-based browsers and Electron apps (Wayland)
+
+This issue usually occurs when the application's GPU cache is broken.
+To fix this issue, we can simply clear the `GPUCache` directory for the application.
+
+For example:
+
+- Google Chrome: `rm -rf ~/.config/google-chrome/Default/GPUCache`
+- Visual Studio Code: `~/.config/Code/GPUCache`
+- Brave Browser: `~/.config/BraveSoftware/Brave-Browser/Default/GPUCache`
+
+Restarting the app after deleting this directory will rebuild the GPU cache, and the issue should be resolved.
