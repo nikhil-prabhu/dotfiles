@@ -88,7 +88,7 @@ TODO
 - Add the following entry in `/etc/fstab`:
 
 ```text
-UUID=<UUID>  /mnt/<MOUNT_DIRECTORY>     <FILESYSTEM>   user,data=writeback,defaults,exec,noatime,barrier=0  0  2
+UUID=<UUID>  /mnt/<MOUNT_DIRECTORY>     <FILESYSTEM>   user,data=writeback,defaults,exec,noatime,nofail,barrier=0  0  2
 ```
 
 - After saving the file and exiting, the drive can now be mounted and selected as a storage drive in Steam.
