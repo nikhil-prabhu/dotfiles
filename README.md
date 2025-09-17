@@ -124,3 +124,24 @@ For example:
 - Brave Browser: `~/.config/BraveSoftware/Brave-Browser/Default/GPUCache`
 
 Restarting the app after deleting this directory will rebuild the GPU cache, and the issue should be resolved.
+
+### Enable automatic codec switching for Bluetooth headphones
+
+**NOTE**: This only works with PipeWire, not with PulseAudio.
+
+- Ensure that wireplumber is running using the command `systemctl --user status wireplumber`
+- Create or edit the file `/usr/share/wireplumber/wireplumber.conf.d/50-bluez.conf`, and add the following content:
+
+```ini
+monitor.bluez.properties = {
+  bluez5.enable-sbc-xq = true,
+  bluez5.enable-msbc = true,
+  bluez5.enable-hw-codec = true,
+  bluez5.autoswitch-profile = true,
+
+  # Explicitly prefer LC3 first, then fall back if needed
+  bluez5.codecs = [ "lc3", "mSBC", "SBC" ]
+}
+```
+
+- Restart relevant services: `systemctl --user restart wireplumber pipewire pipewire-pulse`
