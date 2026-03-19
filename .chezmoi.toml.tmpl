@@ -1,0 +1,7 @@
+{{- $email := promptStringOnce . "email" "What is your email address" "nikhilprabhu98@gmail.com" -}}
+{{- $signingkey := promptStringOnce . "signingkey" "What is your GPG signing key" "67181671" -}}
+
+[data]
+email = {{ $email | quote }}
+signingkey = {{ $signingkey | quote }}
+
