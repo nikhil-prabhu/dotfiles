@@ -4,7 +4,12 @@ My *nix dotfiles (managed by [chezmoi](https://www.chezmoi.io))
 
 ## Setup
 
-TODO
+- Install `chezmoi` following the instructions [here](https://www.chezmoi.io/install/)
+- Run the following command and follow the prompts:
+  ```bash
+  chezmoi init --apply https://github.com/nikhil-prabhu/dotfiles
+  ```
+- Done! (you may need to restart your shell)
 
 ## Platform-specific fixes/tweaks
 
