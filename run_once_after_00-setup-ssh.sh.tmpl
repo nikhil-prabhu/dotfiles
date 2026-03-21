@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-KEY_FILE="$HOME/.ssh/id_ed25519"
+KEY_FILE="$HOME/.ssh/{{ .sshprivkey }}"
 PUB_KEY="${KEY_FILE}.pub"
 
 if [ ! -f "$KEY_FILE" ]; then

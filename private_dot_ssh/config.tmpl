@@ -4,7 +4,7 @@ Include ~/.ssh/config_local
 # --- Managed by Chezmoi (Global Identity) ---
 Host *
 	AddKeysToAgent yes
-	IdentityFile ~/.ssh/id_ed25519
+	IdentityFile ~/.ssh/{{ .sshprivkey }}
 {{- if eq .chezmoi.os "darwin" }}
 	UseKeychain yes
 {{- end }}
