@@ -1,7 +1,9 @@
 {{- $email := promptStringOnce . "email" "What is your email address" "nikhilprabhu98@gmail.com" -}}
-{{- $signingkey := promptStringOnce . "signingkey" "What is your GPG signing key" "67181671" -}}
+{{- $signingkey := promptStringOnce . "signingkey" "What is your GPG signing key ID" -}}
+{{- $sshprivkey := promptStringOnce . "sshprivkey" "What is your SSH private key file name" "id_ed25519" -}}
 
 [data]
 email = {{ $email | quote }}
 signingkey = {{ $signingkey | quote }}
+sshprivkey = {{ $sshprivkey | quote }}
 
