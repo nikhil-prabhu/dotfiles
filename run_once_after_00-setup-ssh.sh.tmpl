@@ -1,0 +1,54 @@
+#!/usr/bin/env bash
+
+KEY_FILE="$HOME/.ssh/id_ed25519"
+PUB_KEY="${KEY_FILE}.pub"
+
+if [ ! -f "$KEY_FILE" ]; then
+    echo "No SSH key found. Generating a new Ed25519 key..."
+    ssh-keygen -t ed25519 -C "{{ .email }}" -f "$KEY_FILE" -N ""
+    echo "Key generated!"
+
+    COPIED=false
+
+    if [[ "$OSTYPE" == "darwin"* ]]; then
+        # macOS
+        cat "$PUB_KEY" | pbcopy && COPIED=true
+    else
+        # Linux - Check for Wayland (wl-copy) or X11 (xclip)
+        if command -v wl-copy &> /dev/null; then
+            cat "$PUB_KEY" | wl-copy && COPIED=true
+        elif command -v xclip &> /dev/null; then
+            cat "$PUB_KEY" | xclip -selection clipboard && COPIED=true
+        fi
+    fi
+
+    if [ "$COPIED" = true ]; then
+        echo "Public key copied to clipboard!"
+    else
+        echo "Clipboard tool not found or failed. Please copy manually:"
+    fi
+
+    # Always print the key as a final fallback
+    echo "------------------------------------------------------------"
+    cat "$PUB_KEY"
+    echo "------------------------------------------------------------"
+    echo "Add this to: https://github.com/settings/keys"
+
+else
+    echo "SSH key already exists at $KEY_FILE. Skipping generation."
+fi
+
+LOCAL_CONFIG="$HOME/.ssh/config_local"
+
+if [ ! -f "$LOCAL_CONFIG" ]; then
+    echo "Creating empty local SSH config at $LOCAL_CONFIG..."
+    touch "$LOCAL_CONFIG"
+    # Set private permissions since it's in the .ssh folder
+    chmod 600 "$LOCAL_CONFIG"
+    
+    echo "# This file is for machine-specific SSH hosts." > "$LOCAL_CONFIG"
+    echo "# It is NOT managed by chezmoi." >> "$LOCAL_CONFIG"
+    echo "# Place your local NAS, printer, or work server configs here." >> "$LOCAL_CONFIG"
+fi
+
+echo "SSH setup complete!"

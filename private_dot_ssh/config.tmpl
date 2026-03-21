@@ -1,0 +1,10 @@
+# --- Local Overrides ---
+Include ~/.ssh/config_local
+
+# --- Managed by Chezmoi (Global Identity) ---
+Host *
+	AddKeysToAgent yes
+	IdentityFile ~/.ssh/id_ed25519
+{{- if eq .chezmoi.os "darwin" }}
+	UseKeychain yes
+{{- end }}
