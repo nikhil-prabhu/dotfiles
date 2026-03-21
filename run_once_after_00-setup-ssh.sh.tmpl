@@ -5,7 +5,7 @@ PUB_KEY="${KEY_FILE}.pub"
 
 if [ ! -f "$KEY_FILE" ]; then
     echo "No SSH key found. Generating a new Ed25519 key..."
-    ssh-keygen -t ed25519 -C "{{ .email }}" -f "$KEY_FILE" -N ""
+    ssh-keygen -t ed25519 -f "$KEY_FILE" -N ""
     echo "Key generated!"
 
     COPIED=false
