@@ -110,9 +110,6 @@ zstyle :omz:plugins:ssh-agent identities id_ed25519
 {{- if eq .chezmoi.os "linux" }}
 export SSH_ASKPASS='/usr/bin/ksshaskpass'
 export SSH_ASKPASS_REQUIRE='prefer'
-{{- end }}
-
-{{- if eq .chezmoi.os "linux" }}
 export PINENTRY_USER_DATA="gui"
 {{- end }}
 
