@@ -21,6 +21,7 @@ zstyle ':omz:plugins:ssh-agent' identities {{ .sshprivkey }}
 export SSH_ASKPASS='/usr/bin/ksshaskpass'
 export SSH_ASKPASS_REQUIRE='prefer'
 export PINENTRY_USER_DATA='gui'
+export EDITOR='vim'
 {{- end }}
 export GPG_TTY=$(tty)
 export PATH="$PATH:$HOME/go/bin"
