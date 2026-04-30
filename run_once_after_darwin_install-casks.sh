@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+
+if [[ -f /opt/homebrew/bin/brew ]]; then
+    eval "$(/opt/homebrew/bin/brew shellenv)"
+fi
+
+casks=(
+  "font-jetbrains-mono-nerd-font"
+  "ghostty"
+  "caffeine"
+  "maccy"
+)
+
+echo "Checking Homebrew casks..."
+
+for cask in "${casks[@]}"; do
+  if ! brew list --cask "$cask" &> /dev/null; then
+    echo "Installing $cask..."
+    brew install --cask "$cask"
+  else
+    echo "$cask is already installed."
+  fi
+done
+
+echo "Cask installation process complete!"
