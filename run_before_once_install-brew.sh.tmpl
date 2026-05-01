@@ -1,3 +1,4 @@
+{{ if eq .chezmoi.os "darwin" -}}
 #!/usr/bin/env bash
 
 if ! command -v brew &> /dev/null; then
@@ -10,5 +11,6 @@ if ! command -v brew &> /dev/null; then
         eval "$(/usr/local/bin/brew shellenv)"
     fi
 else
-    echo "Homebrew already present."
+    echo "Homebrew already present. Skipping."
 fi
+{{ end -}}
