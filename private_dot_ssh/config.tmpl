@@ -5,6 +5,7 @@ Include ~/.ssh/config_local
 Host *
 	AddKeysToAgent yes
 	IdentityFile ~/.ssh/{{ .sshprivkey }}
+	IdentitiesOnly yes
 {{- if eq .chezmoi.os "darwin" }}
 	UseKeychain yes
 {{- end }}
