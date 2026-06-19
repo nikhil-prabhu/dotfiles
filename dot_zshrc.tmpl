@@ -27,3 +27,9 @@ export GTK_USE_PORTAL=1
 {{- end }}
 export GPG_TTY=$(tty)
 export PATH="$PATH:$HOME/go/bin"
+
+# Local overrides
+if [ -f "$HOME/.zshrc.local" ]; then
+	source "$HOME/.zshrc.local"
+fi
+
