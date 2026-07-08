@@ -5,12 +5,27 @@ if [[ -f /opt/homebrew/bin/brew ]]; then
     eval "$(/opt/homebrew/bin/brew shellenv)"
 fi
 
+formulae=(
+  "pinentry-mac"
+)
+
 casks=(
   "font-jetbrains-mono-nerd-font"
   "ghostty"
   "caffeine"
   "maccy"
 )
+
+echo "Checking Homebrew formulae..."
+
+for formula in "${formulae[@]}"; do
+  if ! brew list --formula "$formula" &> /dev/null; then
+    echo "Installing $formula..."
+    brew install --formula "$formula"
+  else
+    echo "$formula is already installed."
+  fi
+done
 
 echo "Checking Homebrew casks..."
 
