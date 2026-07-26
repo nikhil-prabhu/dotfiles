@@ -5,4 +5,6 @@ dot_ssh/config_local
 {{- if ne .chezmoi.os "linux" }}
 .config/MangoHud/
 .config/MangoHud/**
+
+.local/bin/steam-gamescope
 {{- end }}

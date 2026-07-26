@@ -1,0 +1,64 @@
+#!/usr/bin/env bash
+
+USE_HDR=true
+USE_GAMEMODE=true
+USE_FSR=true
+USE_GRAB=true
+USE_VRR=true
+USE_MANGOHUD=true
+
+while [[ "$#" -gt 0 ]]; do
+    case "$1" in
+        --no-hdr)      USE_HDR=false; shift ;;
+        --no-gamemode) USE_GAMEMODE=false; shift ;;
+        --no-fsr)      USE_FSR=false; shift ;;
+        --no-grab)     USE_GRAB=false; shift ;;
+        --no-vrr)      USE_VRR=false; shift ;;
+        --no-mangohud) USE_MANGOHUD=false; shift ;;
+        --)            shift; break ;;
+        -*)            shift ;;
+        *)             break ;;
+    esac
+done
+
+if [ "$USE_HDR" = true ]; then
+    export ENABLE_HDR_WSI=1
+    export DXVK_HDR=1
+else
+    unset ENABLE_HDR_WSI
+    unset DXVK_HDR
+fi
+
+if [ "$USE_MANGOHUD" = true ]; then
+    export MANGOHUD_CONFIG="read_cfg"
+    export MANGOHUD_CONFIGFILE="$HOME/.config/MangoHud/MangoHud.conf"
+fi
+
+# If FSR is on, we render at 1440p and upscale to 4K.
+# If FSR is off, we render at native 4K (1:1 pixel mapping).
+if [ "$USE_FSR" = true ]; then
+    RENDER_W="2560"
+    RENDER_H="1440"
+else
+    RENDER_W="3840"
+    RENDER_H="2160"
+fi
+
+FINAL_CMD=()
+
+[ "$USE_GAMEMODE" = true ] && FINAL_CMD+=("gamemoderun")
+
+FINAL_CMD+=("gamescope")
+FINAL_CMD+=("-w" "$RENDER_W" "-h" "$RENDER_H") # Internal buffer (Dynamic)
+FINAL_CMD+=("-W" "3840" "-H" "2160")           # Output window (4K)
+FINAL_CMD+=("-r" "60" "-f")                    # Refresh & Fullscreen
+
+[ "$USE_FSR" = true ]  && FINAL_CMD+=("-F" "fsr")
+[ "$USE_HDR" = true ]  && FINAL_CMD+=("--hdr-enabled")
+[ "$USE_GRAB" = true ] && FINAL_CMD+=("--force-grab-cursor")
+[ "$USE_VRR" = true ] && FINAL_CMD+=("--adaptive-sync")
+[ "$USE_MANGOHUD" = true ] && FINAL_CMD+=("--mangoapp")
+
+FINAL_CMD+=("--")
+
+exec "${FINAL_CMD[@]}" "$@"
