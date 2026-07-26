@@ -1,6 +1,7 @@
 README.md
 LICENSE
 dot_ssh/config_local
+.config/ghostty/config_local
 
 {{- if ne .chezmoi.os "linux" }}
 .config/MangoHud/
