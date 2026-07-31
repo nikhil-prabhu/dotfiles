@@ -2,34 +2,34 @@
 
 # Runs basic stream setup commands for a Sunshine streaming server.
 #
-# The script currently does 2 things:
+# The script currently does a few things:
 #   1. Turns on/off DND mode (based on passed argument).
 #   2. Disables all displays except the primary to prevent content "bleed" from other displays.
+#   3. Adjusts the display resolution to match the client's requested resolution.
 #
-# NOTE: Both operations rely on commands that are specific to KDE Plasma, and will most probably
+# NOTE: All operations rely on commands that are specific to KDE Plasma, and will most probably
 # not work on other environments.
 #
-# Usage: stream-manager.sh <on|off>
+# Usage: kde-stream-manager.sh <on|off>
 
 ACTION="$1"
-STATE_FILE="/tmp/sunshine-dnd-active.state"
+DND_STATE_FILE="/tmp/sunshine-dnd-active.state"
+MODE_STATE_FILE="/tmp/sunshine-mode.state"
 
 toggle_dnd() {
-    local target="$1" # "on" or "off"
+    local target="$1"
     local currently_tracked=false
 
-    if [ -f "$STATE_FILE" ]; then
+    if [ -f "$DND_STATE_FILE" ]; then
         currently_tracked=true
     fi
 
     if [ "$target" = "on" ] && [ "$currently_tracked" = "false" ]; then
-        # Force DND on via Plasma shortcut toggle and record that we activated it
         qdbus6 org.kde.kglobalaccel /component/plasmashell invokeShortcut "toggle do not disturb"
-        touch "$STATE_FILE"
+        touch "$DND_STATE_FILE"
     elif [ "$target" = "off" ] && [ "$currently_tracked" = "true" ]; then
-        # Revert DND and clear our tracking state
         qdbus6 org.kde.kglobalaccel /component/plasmashell invokeShortcut "toggle do not disturb"
-        rm -f "$STATE_FILE"
+        rm -f "$DND_STATE_FILE"
     fi
 }
 
@@ -49,7 +49,7 @@ manage_displays() {
         return 1
     fi
 
-    # Query the output name where priority is 1 (primary display)
+    # 1. Identify Primary Monitor
     local primary_output
     primary_output=$(echo "$json_data" | jq -r '.outputs[] | select(.priority == 1) | .name')
 
@@ -58,7 +58,38 @@ manage_displays() {
         return 1
     fi
 
-    # Extract all connected output names to loop through them
+    # 2. Dynamic Resolution Matching
+    if [ "$action" = "disable" ]; then
+        # Save the current display mode ID before changing anything
+        local current_mode
+        current_mode=$(echo "$json_data" | jq -r --arg out "$primary_output" '.outputs[] | select(.name == $out) | .currentModeId')
+        echo "$current_mode" > "$MODE_STATE_FILE"
+
+        # If Sunshine passed client dimensions, find the matching mode ID
+        if [ -n "$SUNSHINE_CLIENT_WIDTH" ] && [ -n "$SUNSHINE_CLIENT_HEIGHT" ]; then
+            local mode_id
+            mode_id=$(echo "$json_data" | jq -r --argjson w "$SUNSHINE_CLIENT_WIDTH" --argjson h "$SUNSHINE_CLIENT_HEIGHT" --arg out "$primary_output" '
+                .outputs[] | select(.name == $out) | .modes[] | select(.size.width == $w and .size.height == $h) | .id
+            ' 2>/dev/null | head -n 1)
+
+            if [ -n "$mode_id" ] && [ "$mode_id" != "null" ]; then
+                echo "Switching primary display to ${SUNSHINE_CLIENT_WIDTH}x${SUNSHINE_CLIENT_HEIGHT}..."
+                kscreen-doctor "output.$primary_output.mode.$mode_id"
+            fi
+        fi
+
+    elif [ "$action" = "enable" ]; then
+        # Restore the primary display to its original mode
+        if [ -f "$MODE_STATE_FILE" ]; then
+            local restore_mode
+            restore_mode=$(cat "$MODE_STATE_FILE")
+            echo "Restoring primary display resolution..."
+            kscreen-doctor "output.$primary_output.mode.$restore_mode"
+            rm -f "$MODE_STATE_FILE"
+        fi
+    fi
+
+    # 3. Handle Secondary Displays
     local all_outputs
     all_outputs=$(echo "$json_data" | jq -r '.outputs[].name')
 
@@ -87,3 +118,4 @@ elif [ "$ACTION" = "off" ]; then
     manage_displays enable
     toggle_dnd off
 fi
+
