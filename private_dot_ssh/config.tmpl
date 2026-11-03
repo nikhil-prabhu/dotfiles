@@ -6,6 +6,8 @@ Host *
 	AddKeysToAgent yes
 	IdentityFile ~/.ssh/{{ .sshprivkey }}
 	IdentitiesOnly yes
+	SetEnv TERM=xterm-256color
+	SendEnv COLORTERM TERM_PROGRAM TERM_PROGRAM_VERSION
 {{- if eq .chezmoi.os "darwin" }}
 	UseKeychain yes
 {{- end }}
